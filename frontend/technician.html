@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICT Help | Technician</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">ICT Help <span id="userNameLabel"></span></div>
+    <div class="topbar-links">
+      <button id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="section-header">
+      <h2>Tickets Assigned To Me</h2>
+    </div>
+    <div class="ticket-grid" id="assignedTickets"></div>
+    <p class="empty-state" id="assignedEmpty" style="display:none;">No tickets assigned to you yet.</p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/technician.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICT Help | Sign In</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="centered-wrap">
+    <div class="card login-card">
+      <h1>ICT Help Desk</h1>
+      <p class="subtitle">Sign in to request or manage ICT support</p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="you@company.com" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+        <p class="error-msg" id="loginError"></p>
+      </form>
+
+      <p style="font-size: 0.78rem; color: var(--mid-grey); margin-top: 12px;">
+        Don't have an account? Ask your ICT admin to create one for you.
+      </p>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

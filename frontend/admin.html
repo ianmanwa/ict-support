@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICT Help | Admin</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">ICT Help Admin <span id="userNameLabel"></span></div>
+    <div class="topbar-links">
+      <a href="#" id="myAccountLink">My Account</a>
+      <button id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tickets">Tickets</button>
+      <button class="tab-btn" data-tab="users">Users</button>
+    </div>
+
+    <!-- TICKETS TAB -->
+    <div class="tab-panel active" id="tab-tickets">
+      <div class="section-header">
+        <h2>All Tickets</h2>
+      </div>
+      <div class="table-wrap">
+        <table id="ticketsTable">
+          <thead>
+            <tr>
+              <th>Requester</th>
+              <th>Name / Location</th>
+              <th>Status</th>
+              <th>User Solved</th>
+              <th>Technician Solved</th>
+              <th>Assigned To</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ticketsTableBody"></tbody>
+        </table>
+      </div>
+      <p class="empty-state" id="ticketsEmpty" style="display:none;">No tickets yet.</p>
+    </div>
+
+    <!-- USERS TAB -->
+    <div class="tab-panel" id="tab-users">
+      <div class="section-header">
+        <h2>Accounts</h2>
+        <button class="btn btn-primary btn-small" id="newUserBtn">+ Create Account</button>
+      </div>
+      <div class="table-wrap">
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+
+        </table>
+      </div>
+      <p class="empty-state" id="usersEmpty" style="display:none;">No accounts yet.</p>
+    </div>
+  </div>
+
+  <!-- Create user modal -->
+  <div class="modal-overlay hidden" id="newUserModalOverlay">
+    <div class="modal">
+      <h2>Create Account</h2>
+      <form id="newUserForm">
+        <div class="field">
+          <label for="nuName">Full Name</label>
+          <input type="text" id="nuName" required />
+        </div>
+        <div class="field">
+          <label for="nuEmail">Email</label>
+          <input type="email" id="nuEmail" required />
+        </div>
+        <div class="field">
+          <label for="nuPassword">Temporary Password</label>
+          <input type="text" id="nuPassword" required />
+        </div>
+        <div class="field">
+          <label for="nuRole">Role</label>
+          <select id="nuRole">
+            <option value="user">User</option>
+            <option value="technician">Technician</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <p class="error-msg" id="newUserError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelNewUserBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit account modal (admin editing another user) -->
+  <div class="modal-overlay hidden" id="editUserModalOverlay">
+    <div class="modal">
+      <h2>Edit Account</h2>
+      <form id="editUserForm">
+        <div class="field">
+          <label for="euName">Full Name</label>
+          <input type="text" id="euName" required />
+        </div>
+        <div class="field">
+          <label for="euEmail">Email</label>
+          <input type="email" id="euEmail" required />
+        </div>
+        <div class="field">
+          <label for="euPassword">New Password</label>
+          <input type="text" id="euPassword" placeholder="Leave blank to keep current password" />
+        </div>
+        <p class="error-msg" id="editUserError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelEditUserBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- My Account modal (admin's own email/password) -->
+  <div class="modal-overlay hidden" id="myAccountModalOverlay">
+    <div class="modal">
+      <h2>My Account</h2>
+      <p style="font-size:0.85rem;color:var(--mid-grey);margin-top:-6px;">
+        Update your own login email and/or password. Your current password is required to confirm any change.
+      </p>
+      <form id="myAccountForm">
+        <div class="field">
+          <label for="maEmail">Email</label>
+          <input type="email" id="maEmail" required />
+        </div>
+        <div class="field">
+          <label for="maNewPassword">New Password</label>
+          <input type="text" id="maNewPassword" placeholder="Leave blank to keep current password" />
+        </div>
+        <div class="field">
+          <label for="maCurrentPassword">Current Password (required to save)</label>
+          <input type="password" id="maCurrentPassword" required />
+        </div>
+        <p class="success-msg" id="myAccountSuccess"></p>
+        <p class="error-msg" id="myAccountError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelMyAccountBtn">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Assign technician modal -->
+  <div class="modal-overlay hidden" id="assignModalOverlay">
+    <div class="modal">
+      <h2>Assign Technician</h2>
+      <form id="assignForm">
+        <div class="field">
+          <label for="assignTechSelect">Technician</label>
+          <select id="assignTechSelect" required></select>
+        </div>
+        <p class="error-msg" id="assignError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelAssignBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Assign</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

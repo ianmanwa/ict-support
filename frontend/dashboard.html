@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICT Help | Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">ICT Help <span id="userNameLabel"></span></div>
+    <div class="topbar-links">
+      <a href="#" id="profileLink">Profile Settings</a>
+      <button id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="dashboard-hero">
+      <h1>Request ICT Support</h1>
+      <button class="help-button" id="helpBtn">HELP</button>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h2>Open Tickets</h2>
+      </div>
+      <div class="ticket-grid" id="openTickets"></div>
+      <p class="empty-state" id="openEmpty" style="display:none;">No open tickets right now.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <h2>Closed Tickets</h2>
+      </div>
+      <div class="ticket-grid" id="closedTickets"></div>
+      <p class="empty-state" id="closedEmpty" style="display:none;">No closed tickets yet.</p>
+    </div>
+  </div>
+
+  <!-- Request support modal -->
+  <div class="modal-overlay hidden" id="requestModalOverlay">
+    <div class="modal">
+      <h2>Request ICT Support</h2>
+      <form id="requestForm">
+        <div class="field">
+          <label for="reqName">Your Name</label>
+          <input type="text" id="reqName" required />
+        </div>
+        <div class="field">
+          <label for="reqLocation">Location within building</label>
+          <input type="text" id="reqLocation" required placeholder="e.g. Block C, Room 204" />
+        </div>
+        <div class="field">
+          <label for="reqDetails">More details (optional)</label>
+          <textarea id="reqDetails" placeholder="Briefly describe the issue..."></textarea>
+        </div>
+        <p class="error-msg" id="requestError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelRequestBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Profile settings modal -->
+  <div class="modal-overlay hidden" id="profileModalOverlay">
+    <div class="modal">
+      <h2>Profile Settings</h2>
+      <p style="font-size:0.85rem;color:var(--mid-grey);margin-top:-6px;">
+        Save your default name and location so they auto-fill the support form.
+      </p>
+      <form id="profileForm">
+        <div class="field">
+          <label for="profName">Default Name</label>
+          <input type="text" id="profName" required />
+        </div>
+        <div class="field">
+          <label for="profLocation">Default Location</label>
+          <input type="text" id="profLocation" placeholder="e.g. Block C, Room 204" />
+        </div>
+        <p class="success-msg" id="profileSuccess"></p>
+        <p class="error-msg" id="profileError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelProfileBtn">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

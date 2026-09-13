@@ -22,17 +22,20 @@ if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const errorEl = document.getElementById('loginError');
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
     errorEl.textContent = '';
 
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
     try {
-      const data = await apiRequest('/auth/login', {
-        method: 'POST',
-        auth: false,
-        body: { email, password }
-      });
+      const data = await withLoading(submitBtn, () =>
+        apiRequest('/auth/login', {
+          method: 'POST',
+          auth: false,
+          body: { email, password }
+        }), 'Signing in...'
+      );
 
       localStorage.setItem('ict_token', data.token);
       localStorage.setItem('ict_user', JSON.stringify(data.user));

@@ -19,6 +19,8 @@
     <div class="tabs">
       <button class="tab-btn active" data-tab="tickets">Tickets</button>
       <button class="tab-btn" data-tab="users">Users</button>
+      <button class="tab-btn" data-tab="manage-data">Manage Data</button>
+      <button class="tab-btn" data-tab="reports">Reports</button>
     </div>
 
     <!-- TICKETS TAB -->
@@ -32,9 +34,11 @@
             <tr>
               <th>Requester</th>
               <th>Name / Location</th>
+              <th>Phone</th>
+              <th>Department</th>
               <th>Status</th>
               <th>User Solved</th>
-              <th>Technician Solved</th>
+              <th>Tech Solved</th>
               <th>Assigned To</th>
               <th>Created</th>
               <th>Actions</th>
@@ -58,16 +62,90 @@
             <tr>
               <th>Name</th>
               <th>Email</th>
+              <th>Phone</th>
               <th>Role</th>
               <th>Created</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="usersTableBody"></tbody>
-
         </table>
       </div>
       <p class="empty-state" id="usersEmpty" style="display:none;">No accounts yet.</p>
+    </div>
+
+    <!-- MANAGE DATA TAB -->
+    <div class="tab-panel" id="tab-manage-data">
+      <div class="two-col">
+        <div>
+          <div class="section-header">
+            <h2>Departments</h2>
+          </div>
+          <form class="inline-form" id="newDepartmentForm">
+            <input type="text" id="newDepartmentName" placeholder="New department name" required />
+            <button type="submit" class="btn btn-primary btn-small">Add</button>
+          </form>
+          <p class="error-msg" id="departmentError"></p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Actions</th></tr></thead>
+              <tbody id="departmentsTableBody"></tbody>
+            </table>
+          </div>
+          <p class="empty-state" id="departmentsEmpty" style="display:none;">No departments yet.</p>
+        </div>
+
+        <div>
+          <div class="section-header">
+            <h2>Roles</h2>
+          </div>
+          <form class="inline-form" id="newRoleForm">
+            <input type="text" id="newRoleName" placeholder="New role name" required />
+            <button type="submit" class="btn btn-primary btn-small">Add</button>
+          </form>
+          <p class="error-msg" id="roleError"></p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Actions</th></tr></thead>
+              <tbody id="rolesTableBody"></tbody>
+            </table>
+          </div>
+          <p class="empty-state" id="rolesEmpty" style="display:none;">No roles yet.</p>
+          <p style="font-size:0.78rem;color:var(--mid-grey);margin-top:10px;">
+            The core roles — admin, technician, user — can't be renamed or deleted since the
+            app's access control is built around those exact names. Custom roles you add here
+            are labels for organizing accounts.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS TAB -->
+    <div class="tab-panel" id="tab-reports">
+      <div class="section-header">
+        <h2>Generate Reports</h2>
+      </div>
+      <p style="font-size:0.85rem;color:var(--mid-grey);margin-top:-8px;">
+        Each report includes every ticket (excluding deleted ones) with full timestamps.
+      </p>
+      <div class="report-grid">
+        <div class="report-card">
+          <h3>Word (.docx)</h3>
+          <p>A formatted document with a table of all tickets.</p>
+          <button class="btn btn-secondary btn-small" id="downloadDocxBtn">Download</button>
+        </div>
+        <div class="report-card">
+          <h3>PDF</h3>
+          <p>A printable report, one ticket per entry.</p>
+          <button class="btn btn-secondary btn-small" id="downloadPdfBtn">Download</button>
+        </div>
+        <div class="report-card">
+          <h3>Excel (.xlsx)</h3>
+          <p>A spreadsheet for sorting, filtering, and pivoting.</p>
+          <button class="btn btn-secondary btn-small" id="downloadXlsxBtn">Download</button>
+        </div>
+      </div>
+      <p class="error-msg" id="reportError"></p>
     </div>
   </div>
 
@@ -85,16 +163,16 @@
           <input type="email" id="nuEmail" required />
         </div>
         <div class="field">
+          <label for="nuPhone">Phone Number</label>
+          <input type="tel" id="nuPhone" placeholder="e.g. 0712 345 678" />
+        </div>
+        <div class="field">
           <label for="nuPassword">Temporary Password</label>
           <input type="text" id="nuPassword" required />
         </div>
         <div class="field">
           <label for="nuRole">Role</label>
-          <select id="nuRole">
-            <option value="user">User</option>
-            <option value="technician">Technician</option>
-            <option value="admin">Admin</option>
-          </select>
+          <select id="nuRole"></select>
         </div>
         <p class="error-msg" id="newUserError"></p>
         <div class="modal-actions">
@@ -117,6 +195,10 @@
         <div class="field">
           <label for="euEmail">Email</label>
           <input type="email" id="euEmail" required />
+        </div>
+        <div class="field">
+          <label for="euPhone">Phone Number</label>
+          <input type="tel" id="euPhone" placeholder="e.g. 0712 345 678" />
         </div>
         <div class="field">
           <label for="euPassword">New Password</label>
@@ -174,6 +256,27 @@
         <div class="modal-actions">
           <button type="button" class="btn btn-secondary" id="cancelAssignBtn">Cancel</button>
           <button type="submit" class="btn btn-primary">Assign</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Remark modal -->
+  <div class="modal-overlay hidden" id="remarkModalOverlay">
+    <div class="modal">
+      <h2>Add Remark</h2>
+      <p style="font-size:0.85rem;color:var(--mid-grey);margin-top:-6px;">
+        This will be visible to the requester right away, even if the ticket isn't assigned yet.
+      </p>
+      <form id="remarkForm">
+        <div class="field">
+          <label for="remarkText">Remark</label>
+          <textarea id="remarkText" required placeholder="e.g. We're waiting on a replacement part..."></textarea>
+        </div>
+        <p class="error-msg" id="remarkError"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelRemarkBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Remark</button>
         </div>
       </form>
     </div>

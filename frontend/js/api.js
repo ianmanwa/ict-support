@@ -60,3 +60,57 @@ function formatDate(iso) {
   const d = new Date(iso);
   return d.toLocaleString();
 }
+
+// Disables a button and swaps its label while an async action runs, so a
+// slow response (the backend can be on a free tier that sleeps and takes a
+// while to wake up) doesn't tempt a second click. Restores the button
+// afterwards either way.
+async function withLoading(button, workFn, loadingText = 'Please wait...') {
+  if (!button) return workFn();
+
+  const originalHtml = button.innerHTML;
+  const originalDisabled = button.disabled;
+
+  button.disabled = true;
+  button.classList.add('is-loading');
+  button.innerHTML = `<span class="spinner"></span>${loadingText}`;
+
+  try {
+    return await workFn();
+  } finally {
+    button.disabled = originalDisabled;
+    button.classList.remove('is-loading');
+    button.innerHTML = originalHtml;
+  }
+}
+
+// Downloads a file from an authenticated endpoint (reports, etc.) by
+// fetching it as a blob and triggering a browser download — a plain <a
+// href> can't carry the Authorization header these routes need.
+async function downloadAuthedFile(path, filename) {
+  const token = localStorage.getItem('ict_token');
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  });
+
+  if (!res.ok) {
+    let message = `Download failed (${res.status})`;
+    try {
+      const data = await res.json();
+      if (data.message) message = data.message;
+    } catch (e) {
+      // response wasn't JSON
+    }
+    throw new Error(message);
+  }
+
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}

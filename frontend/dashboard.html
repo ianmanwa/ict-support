@@ -52,6 +52,16 @@
           <input type="text" id="reqLocation" required placeholder="e.g. Block C, Room 204" />
         </div>
         <div class="field">
+          <label for="reqPhone">Phone Number</label>
+          <input type="tel" id="reqPhone" placeholder="e.g. 0712 345 678" />
+        </div>
+        <div class="field">
+          <label for="reqDepartment">Department</label>
+          <select id="reqDepartment">
+            <option value="">Select a department...</option>
+          </select>
+        </div>
+        <div class="field">
           <label for="reqDetails">More details (optional)</label>
           <textarea id="reqDetails" placeholder="Briefly describe the issue..."></textarea>
         </div>
@@ -69,7 +79,7 @@
     <div class="modal">
       <h2>Profile Settings</h2>
       <p style="font-size:0.85rem;color:var(--mid-grey);margin-top:-6px;">
-        Save your default name and location so they auto-fill the support form.
+        Save your default name, location and phone so they auto-fill the support form.
       </p>
       <form id="profileForm">
         <div class="field">
@@ -79,6 +89,10 @@
         <div class="field">
           <label for="profLocation">Default Location</label>
           <input type="text" id="profLocation" placeholder="e.g. Block C, Room 204" />
+        </div>
+        <div class="field">
+          <label for="profPhone">Default Phone Number</label>
+          <input type="tel" id="profPhone" placeholder="e.g. 0712 345 678" />
         </div>
         <p class="success-msg" id="profileSuccess"></p>
         <p class="error-msg" id="profileError"></p>

@@ -38,7 +38,8 @@ router.post('/login', async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        defaultLocation: user.defaultLocation
+        defaultLocation: user.defaultLocation,
+        phone: user.phone
       }
     });
   } catch (err) {
@@ -51,13 +52,14 @@ router.get('/me', protect, async (req, res) => {
   res.json({ user: req.user });
 });
 
-// PATCH /api/auth/profile - save default name/location used to pre-fill the form
+// PATCH /api/auth/profile - save default name/location/phone used to pre-fill the form
 router.patch('/profile', protect, async (req, res) => {
   try {
-    const { name, defaultLocation } = req.body;
+    const { name, defaultLocation, phone } = req.body;
 
     if (name !== undefined) req.user.name = name;
     if (defaultLocation !== undefined) req.user.defaultLocation = defaultLocation;
+    if (phone !== undefined) req.user.phone = phone;
 
     await req.user.save();
     res.json({ message: 'Profile updated', user: req.user });
